@@ -1,32 +1,22 @@
-color backgroundColor = color(0,0,0,9); //select background color
-color radarGreen = color(48, 199, 83);
-float screenHeight = 540;
-float screenWidth = 980;
-int numberOfRings = 5;
+/* 
+Created with Processing 3.5.3
+*/
 
-public void settings(){
-  size(int(screenWidth),int(screenHeight)); //initialize screen
+void setup() {
+  size(1960, 1080);
+  noStroke();
+  fill(0,0,0,9);
+  rect(0,0,1960,1080);
 }
 
-
-void setup(){ //initialize
-  background(backgroundColor); //set background color
-  
-}
-
-void draw(){
-  drawRadarOutline(numberOfRings); //draw radar outline
-}
-
-
-void drawRadarOutline(int numberOfRings){
- 
- stroke(radarGreen);
- noFill();
- /*Draw Rings*/
- for ( int i = 1 ; i <= numberOfRings; i++){
-   arc(screenWidth/2,screenHeight,(screenWidth*i)/numberOfRings,2*screenHeight*i/numberOfRings,PI,2*PI); //draw outer most rings
+void draw() {
+  if (mousePressed) {
+    fill(0);
+  } else {
+    fill(255);
   }
- /*Draw Lines*/
- 
+  fill(255,100,100);
+  ellipse(mouseX, mouseY, 80, 80);
+  fill(0,0,0,9);
+  rect(0,0,1960,1080);
 }
