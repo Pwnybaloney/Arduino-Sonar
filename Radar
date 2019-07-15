@@ -4,9 +4,10 @@
 
 color backgroundColor = color(0,0,0,9); //select background color
 color radarGreen = color(48, 199, 83);
-float screenHeight = 540;
-float screenWidth = 980;
+float screenHeight = 1080/2;
+float screenWidth = 1960/2;
 int numberOfRings = 5;
+int numberOfReferenceLines = 10;
 
 public void settings(){
   size(int(screenWidth),int(screenHeight)); //initialize screen
@@ -28,9 +29,17 @@ void drawRadarOutline(int numberOfRings){
  stroke(radarGreen);
  noFill();
  /*Draw Rings*/
- for ( int i = 1 ; i <= numberOfRings; i++){
-   arc(screenWidth/2,screenHeight,(screenWidth*i)/numberOfRings,2*screenHeight*i/numberOfRings,PI,2*PI); //draw outer most rings
+  for ( int i = 1 ; i <= numberOfRings; i++){
+   arc(screenWidth/2,screenHeight,(screenWidth*i)/numberOfRings,2*screenHeight*i/numberOfRings,PI,2*PI); //draw rings scaled according to the desired number of rings
   }
  /*Draw Lines*/
- 
+  for ( int i = 1; i <= numberOfReferenceLines; i++){
+    pushMatrix();
+    translate(screenWidth/2,screenHeight);
+    line(0,0,screenWidth*cos(radians(i*180/numberOfReferenceLines)),-screenHeight*sin(radians(i*180/numberOfReferenceLines)));
+    print(i*180/numberOfReferenceLines);
+    print('\n'); //ensure angles are evenly spaced
+    popMatrix();
+    
+  }
 }
