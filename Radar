@@ -2,17 +2,19 @@
  Created on Processing 3.5.3
 */
 
-color backgroundColor = color(0,0,0,5); //select background color
+color backgroundColor = color(0,0,0,5); //select background color and fade constant
 color radarGreen = color(48, 199, 83);
-float screenHeight = 1080/2;
-float screenWidth = 1960/2;
-int numberOfRings = 5;
-int numberOfReferenceLines = 10;
+float wholeScreenHeight = 1080/2;
+float wholeScreenWidth = 1.5*1960/2;
+int numberOfRings = 8;
+int numberOfReferenceLines = 8;
 float angle = 0;
-int rHeight = 1000;
-float angleIncrement = 0.2;
+float angleIncrement = 0.5;
+float radarHeight = 1*wholeScreenHeight;
+float radarWidth = 2*radarHeight;
+int rHeight = int(radarHeight);
 public void settings(){
-  size(int(screenWidth),int(screenHeight)); //initialize screen
+  size(int(wholeScreenWidth),int(wholeScreenHeight)); //initialize screen
 }
 
 
@@ -21,6 +23,7 @@ void setup(){ //initialize
   
 }
 
+/*Main Loop*/
 void draw(){
   drawRadarOutline(numberOfRings); //draw radar outline
   
@@ -33,38 +36,38 @@ void draw(){
   
   fill(backgroundColor); //fade the background
   rect(0,0,2000,2000);
+  
 }  
 
 
-void drawRadarOutline(int numberOfRings){
- 
+/*Draw the outline of the radar*/
+void drawRadarOutline(int numberofRings){
  stroke(radarGreen); //set color for sonar outline
  noFill();
  
  /*Draw Sonar Reference Rings*/
-  for ( int i = 1 ; i <= numberOfRings; i++){
-   arc(screenWidth/2,screenHeight,(screenWidth*i)/numberOfRings,2*screenHeight*i/numberOfRings,PI,2*PI); //draw rings scaled according to the desired number of rings
+  for ( int i = 1 ; i <= numberofRings; i++){
+   arc(radarWidth/2,radarHeight,(radarWidth*i)/numberofRings,2*radarHeight*i/numberofRings,PI,2*PI); //draw rings scaled according to the desired number of rings
+   
   }
-  
  /*Draw Sonar Reference Lines*/
   for ( int i = 1; i <= numberOfReferenceLines; i++){
-    pushMatrix();
-    translate(screenWidth/2,screenHeight);
-    line(0,0,screenWidth*cos(radians(i*180/numberOfReferenceLines)),-screenWidth*sin(radians(i*180/numberOfReferenceLines)));
-   // print(i*180/numberOfReferenceLines);
+    pushMatrix(); //temporarily translate the x,y coordinate plane
+    translate(radarWidth/2,radarHeight);
+    line(0,0,rHeight*cos(radians(i*180/numberOfReferenceLines)),-rHeight*sin(radians(i*180/numberOfReferenceLines))); //create lines evenly spread out across the radar
     popMatrix();
-    /*
-    print('\n'); //ensure angles are evenly spaced
-    */
+    
   }
 }
-  
+
+
+/* Function for drawing the primary sweeping line*/
 void drawMainGuideLine(){
   stroke(radarGreen); //set color for sonar lines
   noFill();
   pushMatrix();
-  translate(screenWidth/2,screenHeight);
-  line(0,0,screenWidth*cos(radians(angle)),-screenWidth*sin(radians(angle)));
+  translate(radarWidth/2,radarHeight);
+  line(0,0,rHeight*cos(radians(angle)),-rHeight*sin(radians(angle)));
   popMatrix();
   
   
