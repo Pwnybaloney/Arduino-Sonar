@@ -12,7 +12,7 @@ float angle = 0;
 float angleIncrement = 0.5;
 float radarHeight = 1*wholeScreenHeight;
 float radarWidth = 2*radarHeight;
-int rHeight = int(radarHeight);
+int guideLineHeight = int(radarHeight);
 public void settings(){
   size(int(wholeScreenWidth),int(wholeScreenHeight)); //initialize screen
 }
@@ -54,7 +54,7 @@ void drawRadarOutline(int numberofRings){
   for ( int i = 1; i <= numberOfReferenceLines; i++){
     pushMatrix(); //temporarily translate the x,y coordinate plane
     translate(radarWidth/2,radarHeight);
-    line(0,0,rHeight*cos(radians(i*180/numberOfReferenceLines)),-rHeight*sin(radians(i*180/numberOfReferenceLines))); //create lines evenly spread out across the radar
+    line(0,0,guideLineHeight*cos(radians(i*180/numberOfReferenceLines)),-guideLineHeight*sin(radians(i*180/numberOfReferenceLines))); //create lines evenly spread out across the radar
     popMatrix();
     
   }
@@ -67,7 +67,7 @@ void drawMainGuideLine(){
   noFill();
   pushMatrix();
   translate(radarWidth/2,radarHeight);
-  line(0,0,rHeight*cos(radians(angle)),-rHeight*sin(radians(angle)));
+  line(0,0,guideLineHeight*cos(radians(angle)),-guideLineHeight*sin(radians(angle)));
   popMatrix();
   
   
