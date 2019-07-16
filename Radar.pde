@@ -10,8 +10,8 @@ color radarGreen = color(48, 199, 83);
 
 float wholeScreenHeight = 1080/2;
 float wholeScreenWidth = 1.5*1960/2;
-int numberOfRings = 8;
-int numberOfReferenceLines = 8;
+int numberOfRings = 5;
+int numberOfSectors = 3;
 float angle = 0;
 float angleIncrement = 0.5;
 float radarHeight = 1*wholeScreenHeight;
@@ -20,14 +20,16 @@ int guideLineHeight = int(radarHeight);
 
 
 public void settings(){
-  size(int(wholeScreenWidth),int(wholeScreenHeight)); //initialize screen
+  size(int(wholeScreenWidth),int(wholeScreenHeight)); //set up screen perimeters
   
 }
 
 
 void setup(){ //initialize
   background(backgroundColor); //set background color
+  
 }
+
 
 /*Main Loop*/
 void draw(){
@@ -58,12 +60,13 @@ void drawRadarOutline(int numberofRings){
    
   }
  /*Draw Sonar Reference Lines*/
-  for ( int i = 1; i <= numberOfReferenceLines; i++){
+  
+  for ( int i = 1; i <= numberOfSectors; i++){
     pushMatrix(); //temporarily translate the x,y coordinate plane
-    translate(radarWidth/2,radarHeight);
-    line(0,0,guideLineHeight*cos(radians(i*180/numberOfReferenceLines)),-guideLineHeight*sin(radians(i*180/numberOfReferenceLines))); //create lines evenly spread out across the radar
+    translate(radarWidth/2,radarHeight); //move the origin of the plane to the center of the circle
+    line(0,0,guideLineHeight*cos(radians(i*180/numberOfSectors)),-guideLineHeight*sin(radians(i*180/numberOfSectors))); //create lines evenly spread out across the radar
     popMatrix();
-    
+  
   }
 }
 
