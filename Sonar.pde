@@ -8,13 +8,13 @@ color textColor = color(255,255,255,100);
 color radarGreen = color(48, 199, 83);
 
 
-float wholeScreenHeight = 1080/2;
-float wholeScreenWidth = 1.5*1960/2;
-int numberOfRings = 5;
-int numberOfSectors = 3;
+float wholeScreenHeight = 1080;
+float wholeScreenWidth = 1960;
+int numberOfRings = 7;
+int numberOfSectors = 6;
 float angle = 0;
 float angleIncrement = 0.5;
-float radarHeight = 1*wholeScreenHeight;
+float radarHeight = wholeScreenHeight/2;
 float radarWidth = 2*radarHeight;
 int guideLineHeight = int(radarHeight);
 
