@@ -3,7 +3,11 @@
 */
 
 color backgroundColor = color(0,0,0,5); //select background color and fade constant
+color infoboxBackgroundColor = color(0,0,0,100);
+color textColor = color(255,255,255,100);
 color radarGreen = color(48, 199, 83);
+
+
 float wholeScreenHeight = 1080/2;
 float wholeScreenWidth = 1.5*1960/2;
 int numberOfRings = 8;
@@ -13,14 +17,16 @@ float angleIncrement = 0.5;
 float radarHeight = 1*wholeScreenHeight;
 float radarWidth = 2*radarHeight;
 int guideLineHeight = int(radarHeight);
+
+
 public void settings(){
   size(int(wholeScreenWidth),int(wholeScreenHeight)); //initialize screen
+  
 }
 
 
 void setup(){ //initialize
   background(backgroundColor); //set background color
-  
 }
 
 /*Main Loop*/
@@ -35,8 +41,9 @@ void draw(){
   drawMainGuideLine(); //draw the sweeping green line
   
   fill(backgroundColor); //fade the background
-  rect(0,0,2000,2000);
-  
+  rect(0,0,radarWidth,radarHeight);
+  textControl(); //displays info to the right of the radar
+
 }  
 
 
@@ -64,11 +71,19 @@ void drawRadarOutline(int numberofRings){
 /* Function for drawing the primary sweeping line*/
 void drawMainGuideLine(){
   stroke(radarGreen); //set color for sonar lines
-  noFill();
+  noFill(); //translate the pivot to the center of the circle
   pushMatrix();
   translate(radarWidth/2,radarHeight);
-  line(0,0,guideLineHeight*cos(radians(angle)),-guideLineHeight*sin(radians(angle)));
-  popMatrix();
+  line(0,0,guideLineHeight*cos(radians(angle)),-guideLineHeight*sin(radians(angle))); //draw the reference line along an angle
+  popMatrix(); //reset coordinate to its original position
   
   
+}
+
+void textControl(){
+  textSize(50);
+  fill(textColor);
+  text("degrees: " + str(angle),radarWidth+20,100); //show the degrees the servo turned
+  fill(infoboxBackgroundColor);
+  rect(radarWidth,0,wholeScreenWidth-radarWidth,radarHeight);
 }
