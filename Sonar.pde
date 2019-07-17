@@ -117,7 +117,7 @@ void drawDetectedLine(){ //draw red lines for detected objects
   line(lineStartX,lineStartY,lineEndX,lineEndY); //draw the reference line along an angle
   popMatrix(); //reset coordinate to its original position
   color(radarGreen);
-}
+}//
 
 void simulateData() {
   for (int dataindex = 0; dataindex <= 180; dataindex = dataindex + abs(int(angleIncrement))){
