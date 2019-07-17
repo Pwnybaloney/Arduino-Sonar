@@ -1,11 +1,12 @@
-/*
+  /*
  Created on Processing 3.5.3
 */
 
-color backgroundColor = color(0,0,0,5); //select background color and fade constant
+color backgroundColor = color(0,0,0,3); //select background color and fade constant
 color infoboxBackgroundColor = color(0,0,0,100);
 color textColor = color(255,255,255,100);
-color radarGreen = color(48, 199, 83);
+color radarGreen = color(20, 255, 20,80);
+color radarRed = color(255, 0, 0,1000000);
 
 
 float wholeScreenHeight = 1080;
@@ -13,10 +14,15 @@ float wholeScreenWidth = 1960;
 int numberOfRings = 7;
 int numberOfSectors = 6;
 float angle = 0;
-float angleIncrement = 0.5;
+float angleIncrement = 1;
 float radarHeight = wholeScreenHeight/2;
 float radarWidth = 2*radarHeight;
 int guideLineHeight = int(radarHeight);
+float maximumDistance = 5; //5 meters maximum
+float[] simulatedDistances = new float[181]; // combining both statements in one
+
+
+
 
 
 public void settings(){
@@ -27,7 +33,7 @@ public void settings(){
 
 void setup(){ //initialize
   background(backgroundColor); //set background color
-  
+  simulateData();
 }
 
 
@@ -36,16 +42,21 @@ void draw(){
   drawRadarOutline(numberOfRings); //draw radar outline
   
   angle = angleIncrement + angle;  //increment the angle
-  if (angle >180 || angle < 0){
+  if (angle >= 180 || angle <= 0){
     angleIncrement = - angleIncrement; //change the direction of the sweeper when it reaches the end
   }
   
   drawMainGuideLine(); //draw the sweeping green line
-  
+  if (simulatedDistances[int(angle)] < maximumDistance){
+    drawDetectedLine();
+  }
+  stroke(radarGreen);
   fill(backgroundColor); //fade the background
+  color(radarGreen);
   rect(0,0,radarWidth,radarHeight);
   textControl(); //displays info to the right of the radar
-
+  delay(2);
+  
 }  
 
 
@@ -68,6 +79,7 @@ void drawRadarOutline(int numberofRings){
     popMatrix();
   
   }
+  
 }
 
 
@@ -89,4 +101,32 @@ void textControl(){
   text("degrees: " + str(angle),radarWidth+20,100); //show the degrees the servo turned
   fill(infoboxBackgroundColor);
   rect(radarWidth,0,wholeScreenWidth-radarWidth,radarHeight);
+}
+
+void drawDetectedLine(){ //draw red lines for detected objects
+  float scale = (simulatedDistances[int(angle)]/maximumDistance);
+
+  float lineStartX = guideLineHeight*cos(radians(angle))*scale;
+  float lineStartY = -guideLineHeight*sin(radians(angle))*scale;
+  float lineEndX = lineStartX*1.15;
+  float lineEndY = lineStartY*1.15;
+  stroke(radarRed); //set color for sonar lines
+  noFill(); //translate the pivot to the center of the circle
+  pushMatrix();
+  translate(radarWidth/2,radarHeight);
+  line(lineStartX,lineStartY,lineEndX,lineEndY); //draw the reference line along an angle
+  popMatrix(); //reset coordinate to its original position
+  color(radarGreen);
+}
+
+void simulateData() {
+  for (int dataindex = 0; dataindex <= 180; dataindex = dataindex + abs(int(angleIncrement))){
+    if (dataindex > 60 && dataindex < 90){
+      simulatedDistances[dataindex] = 3;
+    } else if(dataindex > 90 && dataindex < 120){
+      simulatedDistances[dataindex] = 3.5;
+    } else {
+      simulatedDistances[dataindex] = 7;
+    }
+  }
 }
