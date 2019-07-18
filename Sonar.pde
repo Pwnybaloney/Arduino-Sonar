@@ -22,8 +22,11 @@ float maximumDistance = 5; //5 meters maximum
 float[] simulatedDistances; //declare list of distances
 ArrayList<Float> angleList =new ArrayList<Float>(); //record of recorded angles
 ArrayList<Float> distanceList = new ArrayList<Float>(); //record of recorded distances
+ArrayList<Float> simulatedAngleList =new ArrayList<Float>(); //record of recorded angles
+ArrayList<Float> simulatedDistanceList = new ArrayList<Float>(); //record of recorded distances
 ArrayList<String> inputStreamList = new ArrayList<String>();
-int index = 0;
+ArrayList<String> outputStreamList = new ArrayList<String>();
+int simulatedIndex = 0;
 
 
 
@@ -37,6 +40,10 @@ public void settings(){
 void setup(){ //initialize
   background(backgroundColor); //set background color
   //simulateData();
+  
+  /*data simulation*/
+  createInputStream();
+  parseInputStream();
 }
 
 
@@ -49,11 +56,14 @@ void draw(){
     angleIncrement = - angleIncrement; //change the direction of the sweeper when it reaches the end
   }
   
-  angleList.add(angle);
-  simulateData();
+  //angleList.add(angle);
+  //simulateData();
   
-  drawMainGuideLine(); //draw the sweeping green line
-  
+  //drawMainGuideLine(); //draw the sweeping green line
+  if (simulatedIndex < simulatedDistanceList.size()-1){
+    drawSimulatedMainGuideLine();
+    simulatedIndex++;
+  }
   /*
   if (simulatedDistances[int(angle)] < maximumDistance){
     drawDetectedLine();
@@ -128,10 +138,41 @@ void drawMainGuideLine(){
   
 }
 
+void drawSimulatedMainGuideLine(){
+  float lastDistance = (simulatedDistanceList.get(simulatedIndex));
+  float lastAngle = (simulatedAngleList.get(simulatedIndex));
+  //float lineStartX = 0;
+  //float lineStartY = 0;
+  float fullLineEndX = guideLineHeight*cos(radians(lastAngle));
+  float fullLineEndY = -guideLineHeight*sin(radians(lastAngle));
+  float scale = lastDistance/maximumDistance;
+  float edgeLineEndX = scale*fullLineEndX;
+  float edgeLineEndY = scale*fullLineEndY;
+  stroke(radarGreen); //set color for sonar lines
+  noFill(); //translate the pivot to the center of the circle
+  pushMatrix();
+  translate(radarWidth/2,radarHeight);
+    if (lastDistance < maximumDistance){
+      line(0,0,edgeLineEndX,edgeLineEndY);
+      stroke(radarRed);
+      line(edgeLineEndX,edgeLineEndY,edgeLineEndX+1,edgeLineEndY+1);
+      stroke(radarGreen);
+    } else {
+      line(0,0,fullLineEndX,fullLineEndY); //draw the reference line along an angle GREEN
+    }
+    
+    stroke(radarGreen);
+    
+  
+  popMatrix(); //reset coordinate to its original position
+  //println(scale);
+  
+}
+
 void textControl(){
   textSize(50);
   fill(textColor);
-  text("degrees: " + str(angle),radarWidth+20,100); //show the degrees the servo turned
+  text("degrees: " + str(simulatedAngleList.get(simulatedIndex)),radarWidth+20,100); //show the degrees the servo turned
   fill(infoboxBackgroundColor);
   rect(radarWidth,0,wholeScreenWidth-radarWidth,radarHeight);
 }
@@ -178,10 +219,42 @@ void simulateData(){
 }
 
 
-void createInputStream(){
-                                   //"angle,distance/n"
+void createInputStream(){ //create data in form "angle,distance/n"
+  int maxDataPoint = 1500;
+  
+  float simulatedDistance = 5;
+  float simulatedAngleIncrement = 0.1;
+  float minAngle = 40.;
+  float maxAngle = 120.;
+  float simulatedAngle = minAngle;
+  for (int dataPoint = 0; dataPoint < maxDataPoint; dataPoint++){
+    
+    simulatedAngle = simulatedAngleIncrement + simulatedAngle;  //increment the angle
+    
+    if (simulatedAngle > maxAngle || simulatedAngle < minAngle){ //bounds of simulated data
+      simulatedAngleIncrement = -simulatedAngleIncrement; //change the direction of the sweeper when it reaches the end
+    }
+  
+    //adjust at what angle do you want what distance to be
+    if (simulatedAngle > 60 && simulatedAngle < 100 ){ //simulate object detection
+      simulatedDistance = 3;
+    } else{
+      simulatedDistance = 5;
+    }
+    inputStreamList.add(str(simulatedAngle)+","+str(simulatedDistance)+"\n");
+    
+  }
+  println(inputStreamList);
 }
 
+//parse the data
 void parseInputStream(){
   
+   for (int index = 0; index < inputStreamList.size(); index++){
+      String[] dataPair = inputStreamList.get(index).split(",");
+       simulatedAngleList.add(float(dataPair[0]));
+       simulatedDistanceList.add(float(dataPair[1]));
+   }
+   //println(simulatedDistanceList);
+   
 }
