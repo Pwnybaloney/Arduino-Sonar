@@ -20,8 +20,9 @@ float radarWidth = 2*radarHeight;
 int guideLineHeight = int(radarHeight);
 float maximumDistance = 5; //5 meters maximum
 float[] simulatedDistances; //declare list of distances
-ArrayList<Float> angleList =new ArrayList<Float>();
-ArrayList<Float> distanceList = new ArrayList<Float>();
+ArrayList<Float> angleList =new ArrayList<Float>(); //record of recorded angles
+ArrayList<Float> distanceList = new ArrayList<Float>(); //record of recorded distances
+ArrayList<String> inputStreamList = new ArrayList<String>();
 int index = 0;
 
 
@@ -35,7 +36,7 @@ public void settings(){
 
 void setup(){ //initialize
   background(backgroundColor); //set background color
-  simulateData();
+  //simulateData();
 }
 
 
@@ -151,7 +152,7 @@ void drawDetectedLine(){ //draw red lines for detected objects
   color(radarGreen);
 }
 */
-/*
+/* version 1 (could only have angle resolution of 1)
 void simulateData() {
   for (int dataindex = 0; dataindex <= 180; dataindex = dataindex + abs(int(angleIncrement))){
     if (dataindex > 60 && dataindex < 90){
@@ -164,6 +165,7 @@ void simulateData() {
   }
 }
 */
+// version 2 (no proper data stream)
 void simulateData(){
   if( angle > 60 && angle < 90){
     distanceList.add(3.0);
@@ -172,4 +174,14 @@ void simulateData(){
   } else {
     distanceList.add(5.0);
   }
+  
+}
+
+
+void createInputStream(){
+                                   //"angle,distance/n"
+}
+
+void parseInputStream(){
+  
 }
