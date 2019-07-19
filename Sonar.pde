@@ -1,6 +1,12 @@
+import processing.serial.*;
+
   /*
  Created on Processing 3.5.3
 */
+Serial myPort;  // Create object from Serial class
+String val;     // Data received from the serial port
+
+
 
 color backgroundColor = color(0,0,0,5); //select background color and fade constant
 color infoboxBackgroundColor = color(0,0,0,100);
@@ -38,6 +44,10 @@ public void settings(){
 
 
 void setup(){ //initialize
+  String portName = Serial.list()[0]; //change the 0 to a 1 or 2 etc. to match your port
+  myPort = new Serial(this, portName, 9600);
+  
+  
   background(backgroundColor); //set background color
   //simulateData();
   
@@ -49,6 +59,15 @@ void setup(){ //initialize
 
 /*Main Loop*/
 void draw(){
+  //import serial data
+  if ( myPort.available() > 0) 
+  {  // If data is available,
+    val = myPort.readStringUntil('\n');         // read it and store it in val
+  } 
+  println(val); 
+
+
+
   drawRadarOutline(numberOfRings); //draw radar outline
   
   angle = angleIncrement + angle;  //increment the angle
@@ -220,12 +239,12 @@ void simulateData(){
 
 
 void createInputStream(){ //create data in form "angle,distance/n"
-  int maxDataPoint = 1500;
+  int maxDataPoint = 10;
   
   float simulatedDistance = 5;
   float simulatedAngleIncrement = 0.1;
-  float minAngle = 40.;
-  float maxAngle = 120.;
+  float minAngle = 0.;
+  float maxAngle = 180.;
   float simulatedAngle = minAngle;
   for (int dataPoint = 0; dataPoint < maxDataPoint; dataPoint++){
     
@@ -241,10 +260,11 @@ void createInputStream(){ //create data in form "angle,distance/n"
     } else{
       simulatedDistance = 5;
     }
+    println(simulatedAngle);
     inputStreamList.add(str(simulatedAngle)+","+str(simulatedDistance)+"\n");
     
   }
-  println(inputStreamList);
+  //println(inputStreamList);
 }
 
 //parse the data
@@ -255,6 +275,7 @@ void parseInputStream(){
        simulatedAngleList.add(float(dataPair[0]));
        simulatedDistanceList.add(float(dataPair[1]));
    }
+   
    //println(simulatedDistanceList);
    
 }
