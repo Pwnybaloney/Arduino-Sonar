@@ -21,6 +21,7 @@ int numberOfRings = 7;
 int numberOfSectors = 6;
 float angle = 0;
 float angleIncrement = 0.1;
+float distance = 0;
 float radarHeight = wholeScreenHeight/2;
 float radarWidth = 2*radarHeight;
 int guideLineHeight = int(radarHeight);
@@ -52,8 +53,8 @@ void setup(){ //initialize
   //simulateData();
   
   /*data simulation*/
-  createInputStream();
-  parseInputStream();
+  //createInputStream();
+  //parseInputStream();
 }
 
 
@@ -62,27 +63,34 @@ void draw(){
   //import serial data
   if ( myPort.available() > 0) 
   {  // If data is available,
+
     val = myPort.readStringUntil('\n');         // read it and store it in val
+    parseInputStream(val);    //parse the data
+    drawArduinoGuidedLine(); //draw the line
+    print(val);
   } 
-  println(val); 
+  
 
 
 
   drawRadarOutline(numberOfRings); //draw radar outline
   
+  /*
   angle = angleIncrement + angle;  //increment the angle
   if (angle >= 180. || angle <= 0.){
     angleIncrement = - angleIncrement; //change the direction of the sweeper when it reaches the end
   }
-  
+  */
   //angleList.add(angle);
   //simulateData();
   
   //drawMainGuideLine(); //draw the sweeping green line
+  /*
   if (simulatedIndex < simulatedDistanceList.size()-1){
     drawSimulatedMainGuideLine();
     simulatedIndex++;
   }
+  */
   /*
   if (simulatedDistances[int(angle)] < maximumDistance){
     drawDetectedLine();
@@ -127,6 +135,7 @@ void drawRadarOutline(int numberofRings){
 
 
 /* Function for drawing the primary sweeping line*/
+/*
 void drawMainGuideLine(){
   float lastDistance = (distanceList.get(distanceList.size()-1));
   //float lineStartX = 0;
@@ -156,7 +165,8 @@ void drawMainGuideLine(){
   //println(scale);
   
 }
-
+*/
+/*
 void drawSimulatedMainGuideLine(){
   float lastDistance = (simulatedDistanceList.get(simulatedIndex));
   float lastAngle = (simulatedAngleList.get(simulatedIndex));
@@ -187,11 +197,45 @@ void drawSimulatedMainGuideLine(){
   //println(scale);
   
 }
-
+*/
+void drawArduinoGuidedLine(){
+  float fullLineEndX = guideLineHeight*cos(radians(angle));
+  float fullLineEndY = -guideLineHeight*sin(radians(angle));
+  float scale = distance/maximumDistance;
+  float edgeLineEndX = scale*fullLineEndX;
+  float edgeLineEndY = scale*fullLineEndY;
+  stroke(radarGreen); //set color for sonar lines
+  noFill(); //translate the pivot to the center of the circle
+  pushMatrix();
+  translate(radarWidth/2,radarHeight);
+    if (distance < maximumDistance){
+      line(0,0,edgeLineEndX,edgeLineEndY);
+      stroke(radarRed);
+      line(edgeLineEndX,edgeLineEndY,edgeLineEndX+1,edgeLineEndY+1);
+      stroke(radarGreen);
+    } else {
+      line(0,0,fullLineEndX,fullLineEndY); //draw the reference line along an angle GREEN
+    }
+    
+    stroke(radarGreen);
+    
+  
+  popMatrix(); //reset coordinate to its original position
+  //println(scale);
+}
+/*
 void textControl(){
   textSize(50);
   fill(textColor);
   text("degrees: " + str(simulatedAngleList.get(simulatedIndex)),radarWidth+20,100); //show the degrees the servo turned
+  fill(infoboxBackgroundColor);
+  rect(radarWidth,0,wholeScreenWidth-radarWidth,radarHeight);
+}
+*/
+void textControl(){
+  textSize(50);
+  fill(textColor);
+  text("degrees: " + str(angle),radarWidth+20,100); //show the degrees the servo turned
   fill(infoboxBackgroundColor);
   rect(radarWidth,0,wholeScreenWidth-radarWidth,radarHeight);
 }
@@ -267,7 +311,9 @@ void createInputStream(){ //create data in form "angle,distance/n"
   //println(inputStreamList);
 }
 
+
 //parse the data
+/*
 void parseInputStream(){
   
    for (int index = 0; index < inputStreamList.size(); index++){
@@ -277,5 +323,21 @@ void parseInputStream(){
    }
    
    //println(simulatedDistanceList);
+   
+}*/
+void parseInputStream(String dataPair){
+  if (dataPair != null){
+    String[] parsedDataPair = dataPair.split(",");
+      if(parsedDataPair.length==2){
+         angle = float(parsedDataPair[0]);
+         distance = float(parsedDataPair[1]);
+         
+      }
+    /*
+      angle = float(parsedDataPair[0]);
+      distance = float(parsedDataPair[1]);
+     */
+  }
+   
    
 }
