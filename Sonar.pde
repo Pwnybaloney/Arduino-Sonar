@@ -23,7 +23,7 @@ float distance = 0;
 float radarHeight = wholeScreenHeight/2;
 float radarWidth = 2*radarHeight;
 int guideLineHeight = int(radarHeight);
-float maximumDistance = 5; //5 meters maximum
+float maximumDistance = 50; //5 meters maximum
 //float[] simulatedDistances; //declare list of distances
 //ArrayList<Float> angleList =new ArrayList<Float>(); //record of recorded angles
 //ArrayList<Float> distanceList = new ArrayList<Float>(); //record of recorded distances
@@ -148,6 +148,7 @@ void textControl(){
   textSize(50);
   fill(textColor);
   text("degrees: " + str(angle),radarWidth+20,100); //show the degrees the servo turned
+  text("distance: " + str(distance),radarWidth+500,100); //show the degrees the servo turned
   fill(infoboxBackgroundColor);
   rect(radarWidth,0,wholeScreenWidth-radarWidth,radarHeight);
 }
