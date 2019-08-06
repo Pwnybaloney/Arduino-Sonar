@@ -1,0 +1,16 @@
+:Author: TCui289
+:Email: {cuitony.baloney@gmail.com}
+:Date: 23/07/2019
+:Revision: version#
+
+= Project: {Sonar}
+
+Controlled by arduino
+
+connect trig pin to 10
+connect echo pin to 11
+connect servo pin to 9
+
+Using the control variables, you can edit the bounds of the minimum and
+maximum angles along with the angle resolution. Start the arduino program
+and close the serial monitor. Then, open the corresponding program on processing.
