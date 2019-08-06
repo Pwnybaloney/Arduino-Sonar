@@ -1,8 +1,0 @@
-:Author: TCui289
-:Email: {cuitony.baloney@gmail.com}
-:Date: 23/07/2019
-:Revision: version#
-
-= Project: {Sonar}
-
-Controlled by arduino
