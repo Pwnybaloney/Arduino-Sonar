@@ -18,13 +18,11 @@ float wholeScreenWidth = 1960;
 int numberOfRings = 7;
 int numberOfSectors = 6;
 float angle = 0;
-float angleIncrement = 0.1;
 float distance = 0;
 float radarHeight = wholeScreenHeight/2;
 float radarWidth = 2*radarHeight;
 int guideLineHeight = int(radarHeight);
 float maximumDistance = 30; 
-//int simulatedIndex = 0;
 boolean Recieved = true;
 
 public void settings(){
@@ -76,9 +74,9 @@ void serialEvent(Serial Port){
 
 void draw(){
   Radar();
-  if (Recieved == true){
-    drawArduinoGuidedLine();
-    Recieved = false;
+  if (Recieved == true){ //check if data was recieved
+    drawArduinoGuidedLine(); //if it was, draw a line
+    Recieved = false; //reset the control variable
     Port.write("Processing Asking for more"); //ask for more data
   }
 }
@@ -86,15 +84,14 @@ void draw(){
 
 //Draw functions
 
-void Radar(){
-  //parseInputStream(dataRecieved);
-  //drawArduinoGuidedLine();
-  drawRadarOutline(numberOfRings);
-  stroke(radarGreen);
+void Radar(){ //draw the radar outline
+  
+  drawRadarOutline(numberOfRings); //draw arduino rings
+  stroke(radarGreen); //change the color to green
   fill(backgroundColor);
   color(radarGreen);
-  rect(0,0,radarWidth,radarHeight);
-  textControl();
+  rect(0,0,radarWidth,radarHeight); //reset radar background
+  textControl(); //display angle and distance to screen
   
 }
 void drawRadarOutline(int numberofRings){
@@ -127,8 +124,8 @@ void drawArduinoGuidedLine(){
   noFill(); //translate the pivot to the center of the circle
   pushMatrix();
   translate(radarWidth/2,radarHeight);
-    if (distance < maximumDistance){
-      line(0,0,edgeLineEndX,edgeLineEndY);
+    if (distance < maximumDistance){ //if the distance fits within the radar
+      line(0,0,edgeLineEndX,edgeLineEndY); //draw a line accordingly
       stroke(radarRed);
       line(edgeLineEndX,edgeLineEndY,edgeLineEndX+1,edgeLineEndY+1);
       stroke(radarGreen);
@@ -152,12 +149,12 @@ void textControl(){
 }
 
 void parseInputStream(String dataPair){
-  //if (dataPair != null){
+  
     String[] parsedDataPair = dataPair.split(",");
       if(parsedDataPair.length==2){
          angle = float(parsedDataPair[0]);
          distance = float(parsedDataPair[1]);
          
-     // }
+     
   } 
 }
